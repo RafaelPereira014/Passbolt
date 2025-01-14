@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  passbolt:
+    image: passbolt/passbolt:latest
+    container_name: passbolt
+    restart: always
+    environment:
+      - APP_NAME=Passbolt
+      - APP_FULL_BASE_URL=https://your-ip
+      - DATABASE_HOST=db
+      - DATABASE_USER=passbolt
+      - DATABASE_PASSWORD=your-password
+      - DATABASE_NAME=passbolt
+      - EMAIL=youremail@domain.com
+      - PASSWORD_SALT=your-salt-value
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - passbolt_data:/var/www/passbolt
+      - passbolt_uploads:/var/www/passbolt/uploads
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: passbolt_db
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=your-password
+      - MYSQL_DATABASE=passbolt
+      - MYSQL_USER=passbolt
+      - MYSQL_PASSWORD=your-password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  passbolt_data:
+  passbolt_uploads:
+  db_data:
